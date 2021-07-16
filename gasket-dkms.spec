@@ -1,13 +1,13 @@
 %define module gasket
 %define version 1.0.0
-%define build_id 5
+%define build_id 6
 Name:           gasket-dkms
 Version:        %{version}
 Release:        %{build_id}%{?dist}
 Summary:        DKMS source for the gasket driver
 
 License:        GPLv2
-URL:            https://coral.ai/     
+URL:            https://coral.ai/
 Group:          System Environment/Kernel
 BuildArch:      noarch
 Source0:        https://github.com/jyundt/%{name}/archive/%{name}-%{version}-%{build_id}.tar.gz
@@ -54,7 +54,7 @@ cp -r src/* %{buildroot}%{_usrsrc}/%{module}-%{version}
 
 %post
 dkms add -m %{module} -v %{version} -q --rpm_safe_upgrade
-dkms build -m %{module} -v %{version} -q 
+dkms build -m %{module} -v %{version} -q
 dkms install -m %{module} -v %{version} -q --force
 
 %files
@@ -65,6 +65,10 @@ dkms remove -m %{module} -v %{version} --all --rpm_safe_upgrade
 
 
 %changelog
+* Thu Jul 15 2021 Cody Brannan <cody@codybrannan.com> 1.0.0-6
+- Sync with upstream source (cody@codybrannan.com)
+* Thu Jul 15 2021 Cody Brannan <cody@codybrannan.com>
+- Sync with upstream source (cody@codybrannan.com)
 * Thu Sep 24 2020 Jacob Yundt <jyundt@gmail.com> 1.0.0-5
 - Removing patch that modifies upstream driver (jyundt@gmail.com)
 
@@ -80,4 +84,3 @@ dkms remove -m %{module} -v %{version} --all --rpm_safe_upgrade
 
 * Thu Sep 24 2020 Jacob Yundt <jyundt@gmail.com> 1.0.0-1
 - Initial build based on in-tree 5.4.67 driver (3468bca1)
-
