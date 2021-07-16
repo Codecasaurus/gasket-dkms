@@ -14,7 +14,6 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/pci.h>
-#include <linux/platform_device.h>
 #include <linux/sched.h>
 #include <linux/slab.h>
 
@@ -51,7 +50,6 @@ enum gasket_interrupt_packing {
 /* Type of the interrupt supported by the device. */
 enum gasket_interrupt_type {
 	PCI_MSIX = 0,
-	DEVICE_MANAGED = 1, /* Managed externally in device driver */
 };
 
 /*
@@ -225,7 +223,7 @@ struct gasket_coherent_buffer_desc {
 /* Coherent buffer structure. */
 struct gasket_coherent_buffer {
 	/* Virtual base address. */
-	u8 __iomem *virt_base;
+	u8 *virt_base;
 
 	/* Physical base address. */
 	ulong phys_base;
@@ -260,14 +258,8 @@ struct gasket_dev {
 	/* Device info */
 	struct device *dev;
 
-	/* DMA device to use, may be same as above or a parent */
-	struct device *dma_dev;
-
-	/* PCI device pointer for PCI devices */
+	/* PCI subsystem metadata. */
 	struct pci_dev *pci_dev;
-
-	/* Platform device pointer for platform devices */
-	struct platform_device *platform_dev;
 
 	/* This device's index into internal_desc->devs. */
 	int dev_idx;
@@ -540,17 +532,6 @@ int gasket_pci_add_device(struct pci_dev *pci_dev,
 /* Remove a PCI gasket device. */
 void gasket_pci_remove_device(struct pci_dev *pci_dev);
 
-/* Add a platform gasket device. */
-int gasket_platform_add_device(struct platform_device *pdev,
-			       struct gasket_dev **gasket_devp);
-
-/* Remove a platform gasket device. */
-void gasket_platform_remove_device(struct platform_device *pdev);
-
-/* Set DMA device to use (if different from PCI/platform device) */
-void gasket_set_dma_device(struct gasket_dev *gasket_dev,
-			   struct device *dma_dev);
-
 /* Enable a Gasket device. */
 int gasket_enable_device(struct gasket_dev *gasket_dev);
 
@@ -595,7 +576,7 @@ const char *gasket_num_name_lookup(uint num,
 				   const struct gasket_num_name *table);
 
 /* Handy inlines */
-static inline u64 gasket_dev_read_64(struct gasket_dev *gasket_dev, int bar,
+static inline ulong gasket_dev_read_64(struct gasket_dev *gasket_dev, int bar,
 				       ulong location)
 {
 	return readq_relaxed(&gasket_dev->bar_data[bar].virt_base[location]);
