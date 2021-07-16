@@ -65,6 +65,10 @@ dkms remove -m %{module} -v %{version} --all --rpm_safe_upgrade
 
 
 %changelog
+* Thu Jul 15 2021 Cody Brannan <cody@codybrannan.com> 1.0.0-7
+- Update git path (cody@codybrannan.com)
+- Update sources (cody@codybrannan.com)
+
 * Thu Jul 15 2021 Cody Brannan <cody@codybrannan.com> 1.0.0-6
 - Sync with upstream source (cody@codybrannan.com)
 * Thu Jul 15 2021 Cody Brannan <cody@codybrannan.com>
