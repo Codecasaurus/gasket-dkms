@@ -1,6 +1,6 @@
 %define module gasket
 %define version 1.0.0
-%define build_id 6
+%define build_id 7
 Name:           gasket-dkms
 Version:        %{version}
 Release:        %{build_id}%{?dist}
@@ -10,7 +10,7 @@ License:        GPLv2
 URL:            https://coral.ai/
 Group:          System Environment/Kernel
 BuildArch:      noarch
-Source0:        https://github.com/jyundt/%{name}/archive/%{name}-%{version}-%{build_id}.tar.gz
+Source0:        https://github.com/Codecasaurus/%{name}/archive/%{name}-%{version}-%{build_id}.tar.gz
 
 Provides:       kmod(gasket.ko) = %{version}-%{release}
 Provides:       kmod(apex.ko) = %{version}-%{release}
