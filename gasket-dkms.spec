@@ -1,6 +1,7 @@
 %define module gasket
 %define version 1.0.0
-%define build_id 7
+%define build_id 8
+
 Name:           gasket-dkms
 Version:        %{version}
 Release:        %{build_id}%{?dist}
@@ -43,7 +44,7 @@ any number of additional write handles.) This is accomplished by
 tracking open and close data for each driver instance.
 
 %prep
-%setup -n %{name}-%{name}-%{version}-%{build_id}
+%setup -q -n %{name}-%{name}-%{version}-%{build_id}
 
 %build
 
@@ -52,6 +53,20 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_usrsrc}/%{module}-%{version}
 cp -r src/* %{buildroot}%{_usrsrc}/%{module}-%{version}
 
+install -d %{buildroot}%{_sysconfdir}/modules-load.d
+cat > %{buildroot}%{_sysconfdir}/modules-load.d/gasket.conf << EOF
+gasket
+apex
+EOF
+
+install -d %{buildroot}%{_sysconfdir}/udev/rules.d
+cat > %{buildroot}%{_sysconfdir}/udev/rules.d/40-apex.rules << EOF
+SUBSYSTEM=="apex", MODE="0660", GROUP="apex"
+EOF
+
+%pre
+getent group apex >/dev/null || groupadd -r apex
+
 %post
 dkms add -m %{module} -v %{version} -q --rpm_safe_upgrade
 dkms build -m %{module} -v %{version} -q
@@ -59,12 +74,19 @@ dkms install -m %{module} -v %{version} -q --force
 
 %files
 %{_usrsrc}/%{module}-%{version}
+%{_sysconfdir}/modules-load.d/gasket.conf
+%{_sysconfdir}/udev/rules.d/40-apex.rules
 
 %preun
 dkms remove -m %{module} -v %{version} --all --rpm_safe_upgrade
 
 
 %changelog
+* Thu May 20 2023 Cody Brannan <cody@codybrannan.com> 1.0.0-8
+- Add module load conf (cody@codybrannan.com)
+- Add udev rules (cody@codybrannan.com)
+- Misc cleanup (cody@codybrannan.com)
+
 * Thu Jul 15 2021 Cody Brannan <cody@codybrannan.com> 1.0.0-7
 - Update git path (cody@codybrannan.com)
 - Update sources (cody@codybrannan.com)
