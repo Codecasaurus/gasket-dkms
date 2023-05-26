@@ -1,6 +1,6 @@
 %define module gasket
 %define version 1.0.0
-%define build_id 8
+%define build_id 9
 
 Name:           gasket-dkms
 Version:        %{version}
@@ -82,6 +82,9 @@ dkms remove -m %{module} -v %{version} --all --rpm_safe_upgrade
 
 
 %changelog
+* Thu May 20 2023 Cody Brannan <cody@codybrannan.com> 1.0.0-9
+- Sync to upstream source
+
 * Thu May 20 2023 Cody Brannan <cody@codybrannan.com> 1.0.0-8
 - Add module load conf (cody@codybrannan.com)
 - Add udev rules (cody@codybrannan.com)
